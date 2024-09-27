@@ -8,11 +8,11 @@ Because some datasets used in the paper are too large to be uploaded to GitHub, 
 
 # Compile
 
-'''
-g++ main.cpp -o main -std=c++11 -O3
-'''
+` g++ main.cpp -o main `
 
 
 # Run
 To run the program, run the following command.
-./main
+
+
+` ./main `
