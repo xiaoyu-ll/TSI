@@ -125,8 +125,8 @@ int me[20];//query相应边与待查询图中边的匹配数量
 //int me[8]={0,10088,16788,19013,8114,25126,7030,6842};
 int mt[20];//边的匹配顺序
 int mtv[20];//边匹配中间点点匹配顺序
-int tm[20];//由order反求边
-int tmv[20];//由order反求点
+int t_m[20];//由order反求边
+int t_mv[20];//由order反求点
 int con_e[20];//记录每条边出现在时间限制组合中的次数
 int timeconstrain[20][20];
 int matche[20];//边匹配结果
@@ -759,7 +759,7 @@ void cluster_join()//
             }
             mt[order++]=f;
         }
-        tm[f]=order-1;
+        t_m[f]=order-1;
         enq[f].flag=true;
         enq[f].flag2=true;
     }
@@ -840,7 +840,7 @@ void cluster_join()//
             }
             mt[order++]=f;
         }
-        tm[f]=order-1;
+        t_m[f]=order-1;
         enq[f].flag=true;
         enq[f].flag2=true;
         neibor[f]=neibor_can[f];
@@ -897,7 +897,7 @@ void cluster_order()
             }
             mt[order++]=f;
         }
-        tm[f]=order-1;
+        t_m[f]=order-1;
         neibor[f]=neibor_can[f];
         can.erase(can.begin()+pos);
         enq[f].flag=true;
@@ -1046,10 +1046,10 @@ void matchorder()
     int iqs=atoi(eq[mt[1]].source_id.c_str());
     int iqt=atoi(eq[mt[1]].target_id.c_str());
     mtv[mtemp++]=iqs;
-    tmv[iqs]=mtemp-1;
+    t_mv[iqs]=mtemp-1;
     vbf[iqs]=1;
     mtv[mtemp++]=iqt;
-    tmv[iqt]=mtemp-1;
+    t_mv[iqt]=mtemp-1;
     vbf[iqt]=1;
     for(int i=2;i<=eq_num;i++)
     {
@@ -1065,7 +1065,7 @@ void matchorder()
                 if(vbf[iqt]!=1)
                 {
                     mtv[mtemp++]=iqt;
-                    tmv[iqt]=mtemp-1;
+                    t_mv[iqt]=mtemp-1;
                     vbf[iqt]=1;
                 }
             }
@@ -1074,7 +1074,7 @@ void matchorder()
                 if(vbf[iqs]!=1)
                 {
                     mtv[mtemp++]=iqs;
-                    tmv[iqs]=mtemp-1;
+                    t_mv[iqs]=mtemp-1;
                     vbf[iqs]=1;
                 }
             }
@@ -1085,12 +1085,12 @@ bool vmatch(int vvg,int ord)
 {
     for(int k=0;k<vq[mtv[ord]].adj1.size();k++)
     {
-        if(tmv[vq[mtv[ord]].adj1[k]]<ord)
+        if(t_mv[vq[mtv[ord]].adj1[k]]<ord)
         {
             bool vflag1=false;
             for(int l=0;l<vg[vvg].adj1.size();l++)
             {
-                if(matchv[tmv[vq[mtv[ord]].adj1[k]]]==vg[vvg].adj1[l])
+                if(matchv[t_mv[vq[mtv[ord]].adj1[k]]]==vg[vvg].adj1[l])
                 {
                     vflag1=true;
                     break;
@@ -1116,13 +1116,13 @@ bool vmatch(int vvg,int ord)
     }
     for(int k=0;k<vq[mtv[ord]].adj2.size();k++)
     {//判断与已经匹配的顶点是否能匹配上
-        if(tmv[vq[mtv[ord]].adj2[k]]<ord)
+        if(t_mv[vq[mtv[ord]].adj2[k]]<ord)
         {
             bool vflag1=false;
             for(int l=0;l<vg[vvg].adj2.size();l++)
             {
-                int di=matchv[tmv[vq[mtv[ord]].adj2[k]]];
-                if(matchv[tmv[vq[mtv[ord]].adj2[k]]]==vg[vvg].adj2[l])
+                int di=matchv[t_mv[vq[mtv[ord]].adj2[k]]];
+                if(matchv[t_mv[vq[mtv[ord]].adj2[k]]]==vg[vvg].adj2[l])
                 {                                
                     vflag1=true;
                     break;
@@ -1192,8 +1192,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1220,8 +1220,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1248,8 +1248,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1281,8 +1281,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1309,8 +1309,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1337,8 +1337,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1370,8 +1370,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1398,8 +1398,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1426,8 +1426,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1459,8 +1459,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1487,8 +1487,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1515,8 +1515,8 @@ void expandmatching(int dep,int mavd)
                                 if(arr[l][4]==dep)
                                 {
                                     bool tflag1=false;
-                                    //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                    if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                    //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                    if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                     tflag1=true;
                                     if(!tflag1)
                                     {
@@ -1543,7 +1543,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj2[j])]==lq[eq[mt[dep]].source_id]&&vg[vg[jointemp].adj2[j]].outdegree>=vq[isq].outdegree)
                         {
-                            if(tmv[isq]<mavd&&matchv[tmv[isq]]!=vg[itn].adj2[j])
+                            if(t_mv[isq]<mavd&&matchv[t_mv[isq]]!=vg[itn].adj2[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[isq].adj1.size();k++)
@@ -1591,8 +1591,8 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        //if(eg[match[tm[arr[l][2]]]].dur>eg[match[tm[arr[l][1]]]].dur)
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        //if(eg[match[t_m[arr[l][2]]]].dur>eg[match[t_m[arr[l][1]]]].dur)
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -1626,7 +1626,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj2[j])]==lq[eq[mt[dep]].source_id]&&eg[vg[jointemp].adje2[j]].dur>eg[matche[diradj]].dur&&(eg[vg[jointemp].adje2[j]].dur-eg[matche[diradj]].dur)<=timeconstrain[mt[diradj]][mt[dep]]&&vg[vg[jointemp].adj2[j]].outdegree>=vq[isq].outdegree)
                         {
-                            if(tmv[isq]<mavd&&matchv[tmv[isq]]!=vg[itn].adj2[j])
+                            if(t_mv[isq]<mavd&&matchv[t_mv[isq]]!=vg[itn].adj2[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[isq].adj1.size();k++)
@@ -1674,7 +1674,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -1708,7 +1708,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj2[j])]==lq[eq[mt[dep]].source_id]&&eg[matche[diradj]].dur>eg[vg[jointemp].adje2[j]].dur&&(eg[matche[diradj]].dur-eg[vg[jointemp].adje2[j]].dur)<=timeconstrain[mt[dep]][mt[diradj]]&&vg[vg[jointemp].adj2[j]].outdegree>=vq[isq].outdegree)
                         {
-                            if(tmv[isq]<mavd&&matchv[tmv[isq]]!=vg[itn].adj2[j])
+                            if(t_mv[isq]<mavd&&matchv[t_mv[isq]]!=vg[itn].adj2[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[isq].adj1.size();k++)
@@ -1756,7 +1756,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -1794,7 +1794,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj1[j])]==lq[eq[mt[dep]].target_id]&&vg[vg[isn].adj1[j]].indegree>=vq[itq].indegree)
                         {
-                            if(tmv[itq]<mavd&&matchv[tmv[itq]]!=vg[isn].adj1[j])
+                            if(t_mv[itq]<mavd&&matchv[t_mv[itq]]!=vg[isn].adj1[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[itq].adj1.size();k++)
@@ -1842,7 +1842,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -1876,7 +1876,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj1[j])]==lq[eq[mt[dep]].target_id]&&eg[vg[jointemp].adje1[j]].dur>eg[matche[diradj]].dur&&(eg[vg[jointemp].adje1[j]].dur-eg[matche[diradj]].dur)<=timeconstrain[mt[diradj]][mt[dep]]&&vg[vg[jointemp].adj1[j]].indegree>=vq[itq].indegree)
                         {
-                            if(tmv[itq]<mavd&&matchv[tmv[itq]]!=vg[isn].adj1[j])
+                            if(t_mv[itq]<mavd&&matchv[t_mv[itq]]!=vg[isn].adj1[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[itq].adj1.size();k++)
@@ -1924,7 +1924,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -1958,7 +1958,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj1[j])]==lq[eq[mt[dep]].target_id]&&eg[matche[diradj]].dur>eg[vg[jointemp].adje1[j]].dur&&(eg[matche[diradj]].dur-eg[vg[jointemp].adje1[j]].dur)<=timeconstrain[mt[dep]][mt[diradj]]&&vg[vg[isn].adj1[j]].indegree>=vq[itq].indegree)
                         {
-                            if(tmv[itq]<mavd&&matchv[tmv[itq]]!=vg[isn].adj1[j])
+                            if(t_mv[itq]<mavd&&matchv[t_mv[itq]]!=vg[isn].adj1[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[itq].adj1.size();k++)
@@ -2006,7 +2006,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -2044,7 +2044,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj1[j])]==lq[eq[mt[dep]].target_id]&&vg[vg[jointemp].adj1[j]].indegree>=vq[itq].indegree)
                         {
-                            if(tmv[itq]<mavd&&matchv[tmv[itq]]!=vg[itn].adj1[j])
+                            if(t_mv[itq]<mavd&&matchv[t_mv[itq]]!=vg[itn].adj1[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[itq].adj1.size();k++)
@@ -2092,7 +2092,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -2126,7 +2126,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj1[j])]==lq[eq[mt[dep]].target_id]&&eg[vg[jointemp].adje1[j]].dur>eg[matche[diradj]].dur&&(eg[vg[jointemp].adje1[j]].dur-eg[matche[diradj]].dur)<=timeconstrain[mt[diradj]][mt[dep]]&&vg[vg[itn].adj1[j]].indegree>=vq[itq].indegree)
                         {
-                            if(tmv[itq]<mavd&&matchv[tmv[itq]]!=vg[itn].adj1[j])
+                            if(t_mv[itq]<mavd&&matchv[t_mv[itq]]!=vg[itn].adj1[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[itq].adj1.size();k++)
@@ -2174,7 +2174,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -2208,7 +2208,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj1[j])]==lq[eq[mt[dep]].target_id]&&eg[matche[diradj]].dur>eg[vg[jointemp].adje1[j]].dur&&(eg[matche[diradj]].dur-eg[vg[jointemp].adje1[j]].dur)<=timeconstrain[mt[dep]][mt[diradj]]&&vg[vg[itn].adj1[j]].indegree>=vq[itq].indegree)
                         {
-                            if(tmv[itq]<mavd&&matchv[tmv[itq]]!=vg[itn].adj1[j])
+                            if(t_mv[itq]<mavd&&matchv[t_mv[itq]]!=vg[itn].adj1[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[itq].adj1.size();k++)
@@ -2256,7 +2256,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -2294,7 +2294,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj2[j])]==lq[eq[mt[dep]].source_id]&&vg[vg[isn].adj2[j]].outdegree>=vq[isq].outdegree)
                         {
-                            if(tmv[isq]<mavd&&matchv[tmv[isq]]!=vg[isn].adj2[j])
+                            if(t_mv[isq]<mavd&&matchv[t_mv[isq]]!=vg[isn].adj2[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[isq].adj1.size();k++)
@@ -2342,7 +2342,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -2376,7 +2376,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj2[j])]==lq[eq[mt[dep]].source_id]&&eg[vg[jointemp].adje2[j]].dur>eg[matche[diradj]].dur&&(eg[vg[jointemp].adje2[j]].dur-eg[matche[diradj]].dur)<=timeconstrain[mt[diradj]][mt[dep]]&&vg[vg[isn].adj2[j]].outdegree>=vq[isq].outdegree)
                         {
-                            if(tmv[isq]<mavd&&matchv[tmv[isq]]!=vg[isn].adj2[j])
+                            if(t_mv[isq]<mavd&&matchv[t_mv[isq]]!=vg[isn].adj2[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[isq].adj1.size();k++)
@@ -2424,7 +2424,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -2458,7 +2458,7 @@ void expandmatching(int dep,int mavd)
                     {
                         if(lg[to_string(vg[jointemp].adj2[j])]==lq[eq[mt[dep]].source_id]&&eg[matche[diradj]].dur>eg[vg[jointemp].adje2[j]].dur&&(eg[matche[diradj]].dur-eg[vg[jointemp].adje2[j]].dur)<=timeconstrain[mt[dep]][mt[diradj]]&&vg[vg[isn].adj2[j]].outdegree>=vq[isq].outdegree)
                         {
-                            if(tmv[isq]<mavd&&matchv[tmv[isq]]!=vg[isn].adj2[j])
+                            if(t_mv[isq]<mavd&&matchv[t_mv[isq]]!=vg[isn].adj2[j])
                             continue;
                             bool flage=true;
                             for(int k=0;k<vq[isq].adj1.size();k++)
@@ -2506,7 +2506,7 @@ void expandmatching(int dep,int mavd)
                                     if(arr[l][4]==dep)
                                     {
                                         bool tflag1=false;
-                                        if(eg[matche[tm[arr[l][2]]]].dur>eg[matche[tm[arr[l][1]]]].dur&&(eg[matche[tm[arr[l][2]]]].dur-eg[matche[tm[arr[l][1]]]].dur)<=arr[l][3])
+                                        if(eg[matche[t_m[arr[l][2]]]].dur>eg[matche[t_m[arr[l][1]]]].dur&&(eg[matche[t_m[arr[l][2]]]].dur-eg[matche[t_m[arr[l][1]]]].dur)<=arr[l][3])
                                         tflag1=true;
                                         if(!tflag1)
                                         {
@@ -2555,12 +2555,12 @@ void pamt()
         bool vflag=true;//vt=itn//点匹配
         for(int k=0;k<vq[mtv[2]].adj1.size();k++)
         {
-            if(tmv[vq[mtv[2]].adj1[k]]<2)
+            if(t_mv[vq[mtv[2]].adj1[k]]<2)
             {
                 bool vflag1=false;
                 for(int l=0;l<vg[itn].adj1.size();l++)
                 {
-                    if(matchv[tmv[vq[mtv[2]].adj1[k]]]==vg[itn].adj1[l])
+                    if(matchv[t_mv[vq[mtv[2]].adj1[k]]]==vg[itn].adj1[l])
                     {
                         vflag1=true;
                         break;
@@ -2577,12 +2577,12 @@ void pamt()
         continue;
         for(int k=0;k<vq[mtv[2]].adj2.size();k++)
         {//判断与已经匹配的顶点是否能匹配上
-            if(tmv[vq[mtv[2]].adj2[k]]<2)
+            if(t_mv[vq[mtv[2]].adj2[k]]<2)
             {
                 bool vflag1=false;
                 for(int l=0;l<vg[itn].adj2.size();l++)
                 {
-                    if(matchv[tmv[vq[mtv[2]].adj2[k]]]==vg[itn].adj2[l])
+                    if(matchv[t_mv[vq[mtv[2]].adj2[k]]]==vg[itn].adj2[l])
                     {
                         vflag1=true;
                         break;
