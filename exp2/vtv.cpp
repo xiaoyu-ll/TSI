@@ -104,7 +104,7 @@ int mv[20];//query相应顶点与待查询图中顶点的匹配数量，pl[i]=mv
 //int me[8]={0,10088,16788,19013,8114,25126,7030,6842};
 int mt[20];//边的匹配顺序
 //int mt[20]={0,5,1,2,6,4,3};
-int tm[20];//由order反求边
+int t_m[20];//由order反求边
 int match[20];//匹配结果
 int neibor[20];//形成matchorder的直接邻居
 int neibor_can[20];//形成matchorder的候选邻居
@@ -828,7 +828,7 @@ void can_order()
         }
     }
     mt[order++]=f;
-    tm[f]=order-1;
+    t_m[f]=order-1;
     neibor[f]=neibor_can[f];
     neiborsp[f]=neiborsp_can[f];
     vq[f].flag=true;
@@ -859,7 +859,7 @@ void matchorder()
         }
     }
     mt[order++]=f;//第一个匹配的顶点
-    tm[f]=order-1;
+    t_m[f]=order-1;
     vq[f].flag=true;
     int kk=vq_num-1;
     while(kk--)
@@ -934,7 +934,7 @@ bool timecon()
 }   
 bool astimematch(int v,int vsm,int vla)
 {
-    int or1=tm[v],or2=tm[vsm],or3=tm[vla];
+    int or1=t_m[v],or2=t_m[vsm],or3=t_m[vla];
     int t1,t2;
     if(vq[v].sm+vq[v].la==2)
     {
@@ -1031,10 +1031,10 @@ void expandmatching(int dep)
             int si=atoi(eq[i].source_id.c_str());
             int ti=atoi(eq[i].target_id.c_str());
             etg[i].dur.clear();
-            for(int j=0;j<vg[match[tm[si]]].adj1.size();j++)
+            for(int j=0;j<vg[match[t_m[si]]].adj1.size();j++)
             {
-                if(vg[match[tm[si]]].adj1[j]==match[tm[ti]])
-                etg[i].dur.push_back(vg[match[tm[si]]].adjt1[j]);
+                if(vg[match[t_m[si]]].adj1[j]==match[t_m[ti]])
+                etg[i].dur.push_back(vg[match[t_m[si]]].adjt1[j]);
             }
         }              
         if(timecon())
@@ -1083,12 +1083,12 @@ void expandmatching(int dep)
             int vt=vec[mt[dep]][j];
             for(int k=0;k<vq[mt[dep]].adj1.size();k++)
             {
-                if(tm[vq[mt[dep]].adj1[k]]<dep)
+                if(t_m[vq[mt[dep]].adj1[k]]<dep)
                 {
                     bool vflag1=false;
                     for(int l=0;l<vg[vt].adj1.size();l++)
                     {
-                        if(match[tm[vq[mt[dep]].adj1[k]]]==vg[vt].adj1[l])
+                        if(match[t_m[vq[mt[dep]].adj1[k]]]==vg[vt].adj1[l])
                         {
                             vflag1=true;
                             break;
@@ -1105,12 +1105,12 @@ void expandmatching(int dep)
             continue;
             for(int k=0;k<vq[mt[dep]].adj2.size();k++)
             {//判断与已经匹配的顶点是否能匹配上
-                if(tm[vq[mt[dep]].adj2[k]]<dep)
+                if(t_m[vq[mt[dep]].adj2[k]]<dep)
                 {
                     bool vflag1=false;
                     for(int l=0;l<vg[vt].adj2.size();l++)
                     {
-                        if(match[tm[vq[mt[dep]].adj2[k]]]==vg[vt].adj2[l])
+                        if(match[t_m[vq[mt[dep]].adj2[k]]]==vg[vt].adj2[l])
                         {
                             vflag1=true;
                             break;
