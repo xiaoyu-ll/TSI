@@ -7,12 +7,33 @@ Temporal-constraint subgraph matching has emerged as a significant challenge in 
 Because some datasets used in the paper are too large to be uploaded to GitHub, you can download  them at https://pan.quark.cn/s/1308697e75fa
 
 # Compile
+All experiments are compiled in the same way, first in the ` exp2 ` directory.
+
+
+` cd exp2 `
+
 
 ` g++ main.cpp -o main `
 
 
+` g++ rids.cpp -o rids `
+
+
+` g++ vtv.cpp -o vtv `
+
+
+` g++ ete.cpp -o ete `
+
+
+` g++ eve.cpp -o eve `
+
+
 # Run
-To run the program, run the following command.
+To run the program, you can choose an algorithm to run.
 
 
 ` ./main `
+
+
+
+` rids ` or ` vtv ` or ` ete ` or ` eve `
