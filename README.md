@@ -13,19 +13,16 @@ All experiments are compiled in the same way, first in the ` exp2 ` directory.
 ` cd exp2 `
 
 
-` g++ main.cpp -o main `
+` g++ -O3 main.cpp -o main `
 
 
-` g++ rids.cpp -o rids `
+` g++ -O3 vtv.cpp -o vtv `
 
 
-` g++ vtv.cpp -o vtv `
+` g++ -O3 ete.cpp -o ete `
 
 
-` g++ ete.cpp -o ete `
-
-
-` g++ eve.cpp -o eve `
+` g++ -O3 eve.cpp -o eve `
 
 
 # Run
